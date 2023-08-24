@@ -6,6 +6,11 @@ from google.cloud import storage
 gcs_bucket_name = 'redis-backup-from-instance'
 gcs_backup_prefix = 'redis_backups/'
 
+def get_formatted_timestamp():
+    current_time = time.localtime()
+    formatted_time = time.strftime('%Y-%m-%d-%I-%M-%p', current_time)
+    return formatted_time
+
 def main():
     # Connect to GCS
     storage_client = storage.Client()
@@ -25,7 +30,7 @@ def main():
             subprocess.run(docker_cp_command, check=True)
 
             # Create a backup timestamp
-            backup_timestamp = time.strftime('%Y%m%d%H%M%S')
+            backup_timestamp = get_formatted_timestamp()
             backup_file_name = f'{gcs_backup_prefix}redis_backup_{backup_timestamp}.rdb'
 
             # Upload the backup file to GCS
@@ -33,7 +38,8 @@ def main():
             blob.upload_from_filename('./dump.rdb')
             print(f'Successfully backed up to GCS: {backup_file_name}')
 
-            time.sleep(55)  # Wait for 55 seconds before the next backup
+            # Wait for 30 minutes before the next backup
+            time.sleep(30 * 60)
         except Exception as e:
             print(f'Error: {e}')
             time.sleep(10)  # Wait for 10 seconds before retrying
