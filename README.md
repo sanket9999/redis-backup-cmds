@@ -39,4 +39,4 @@ sudo apt install python3-pip
 pip3 install redis google-cloud-storage
 ```
 
-
+#newgrp docker  # Activate the new group membership
