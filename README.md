@@ -1,42 +1,27 @@
-import time
-import subprocess
-from google.cloud import storage
-
-# GCS settings
-gcs_bucket_name = 'redis-backup-from-instance'
-gcs_backup_prefix = 'redis_backups/'
-
-def main():
-    # Connect to GCS
-    storage_client = storage.Client()
-    bucket = storage_client.bucket(gcs_bucket_name)
-
-    while True:
-        try:
-            # Authenticate with Redis using redis-cli and perform BGSAVE
-            auth_command = ['redis-cli', '-h', '127.0.0.1', '-p', '6379', '-a', 'qwertyuiop', 'BGSAVE']
-            subprocess.run(auth_command, check=True)
-
-            # Wait for the backup to complete
-            time.sleep(5)
-
-            # Copy Redis data file from the container to the local filesystem
-            docker_cp_command = ['docker', 'cp', 'redis_container:/data/dump.rdb', './dump.rdb']
-            subprocess.run(docker_cp_command, check=True)
-
-            # Create a backup timestamp
-            backup_timestamp = time.strftime('%Y%m%d%H%M%S')
-            backup_file_name = f'{gcs_backup_prefix}redis_backup_{backup_timestamp}.rdb'
-
-            # Upload the backup file to GCS
-            blob = bucket.blob(backup_file_name)
-            blob.upload_from_filename('./dump.rdb')
-            print(f'Successfully backed up to GCS: {backup_file_name}')
-
-            time.sleep(55)  # Wait for 55 seconds before the next backup
-        except Exception as e:
-            print(f'Error: {e}')
-            time.sleep(10)  # Wait for 10 seconds before retrying
-
-if __name__ == '__main__':
-    main()
+```
+    1  sudo apt update
+    2  sudo apt install apt-transport-https ca-certificates curl software-properties-common
+    3  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    4  echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    5  sudo apt update
+    6  sudo apt install docker-ce docker-ce-cli containerd.io
+    7  sudo docker volume create redis_data
+    8  sudo docker run -d -p 6379:6379 -v redis_data:/data --name redis_container redislabs/redisearch:latest
+    9  sudo apt install redis-tools
+   10  sudo docker run -it --rm --link redis_container:redis redis redis-cli -h redis -p 6379
+   11  sudo docker update --restart always redis_container
+   12  sudo docker start redis_container
+   13  redis-cli
+   14  sudo docker ps
+   15  python3 backup_redis_to_gcs3.py
+   16  gcloud auth application-default login
+   17  python3 backup_redis_to_gcs3.py
+   18  gsutil config -e
+   19  sudo gsutil config -e
+   20  gcloud auth application-default login
+   21  python3 backup_redis_to_gcs3.py
+   22  nano backup_redis_to_gcs4.py
+   23  python3 backup_redis_to_gcs4.py
+   24  cat backup_redis_to_gcs4.py
+   25  history
+   ```
