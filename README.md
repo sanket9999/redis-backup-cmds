@@ -25,17 +25,18 @@
    24  cat backup_redis_to_gcs4.py
    25  history
    ```
-
+```
 sudo usermod -aG docker $USER
 newgrp docker  # Activate the new group membership
-
-
+```
+```
 gcloud auth application-default login
-
+```
+```
 sudo apt install python3-pip
-
-
+```
+```
 pip3 install redis google-cloud-storage
-
+```
 
 
