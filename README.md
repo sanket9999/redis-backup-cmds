@@ -133,6 +133,22 @@ nano backup_redis_to_gcs.py
 #copy the code from the python file provided in the repository.
 ```
 # ----------------------------------------------------------------
+
+```
+sudo apt-get install google-cloud-sdk
+```
+# ----------------------------------------------------------------
+
+```
+pip install google-cloud-secret-manager
+```
+# ----------------------------------------------------------------
+
+# In GCP Enable Secret Manager API, In security, Go in secret manager, create secret, enter name and password in value and hit create.
+
+# ----------------------------------------------------------------
+
+
 ```
 sudo pm2 startup systemd
 
@@ -160,17 +176,6 @@ pm2 list
 ```
 # ----------------------------------------------------------------
 
-```
-sudo apt-get install google-cloud-sdk
-```
-# ----------------------------------------------------------------
-
-```
-pip install google-cloud-secret-manager
-```
-# ----------------------------------------------------------------
-# In GCP Enable Secret Manager API, In security, Go in secret manager, create secret, enter name and password in value and hit create.
-# ----------------------------------------------------------------
 
 # Summary 
 # 
