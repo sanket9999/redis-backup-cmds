@@ -1,4 +1,4 @@
-# redis-search-on-ubantu-instanc-with-GCP-bucket-bakcup
+# Redis-search-on-ubantu-instanc-with-GCP-bucket-bakcup
 
 
 ```
