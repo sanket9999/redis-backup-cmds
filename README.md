@@ -1,42 +1,171 @@
+# redis-search-on-ubantu-instanc-with-GCP-bucket-bakcup
+
+
 ```
-    1  sudo apt update
-    2  sudo apt install apt-transport-https ca-certificates curl software-properties-common
-    3  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-    4  echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-    5  sudo apt update
-    6  sudo apt install docker-ce docker-ce-cli containerd.io
-    7  sudo docker volume create redis_data
-    8  sudo docker run -d -p 6379:6379 -v redis_data:/data --name redis_container redislabs/redisearch:latest
-    9  sudo apt install redis-tools
-   10  sudo docker run -it --rm --link redis_container:redis redis redis-cli -h redis -p 6379
-   11  sudo docker update --restart always redis_container
-   12  sudo docker start redis_container
-   13  redis-cli
-   14  sudo docker ps
-   15  python3 backup_redis_to_gcs3.py
-   16  gcloud auth application-default login
-   17  python3 backup_redis_to_gcs3.py
-   18  gsutil config -e
-   19  sudo gsutil config -e
-   20  gcloud auth application-default login
-   21  python3 backup_redis_to_gcs3.py
-   22  nano backup_redis_to_gcs4.py
-   23  python3 backup_redis_to_gcs4.py
-   24  cat backup_redis_to_gcs4.py
-   25  history
-   ```
+sudo apt update
 ```
-sudo usermod -aG docker $USER
-newgrp docker  # Activate the new group membership
+# ------------------------------------------------------------------------------
 ```
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
 ```
-gcloud auth application-default login
+# ------------------------------------------------------------------------------
 ```
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+```
+# ------------------------------------------------------------------------------
+```
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+# ------------------------------------------------------------------------------
+```
+sudo apt update
+```
+# ------------------------------------------------------------------------------
+```
+sudo apt install docker-ce docker-ce-cli containerd.io
+```
+# ------------------------------------------------------------------------------
+```
+sudo docker volume create redis_data
+```
+# ------------------------------------------------------------------------------
+```
+sudo docker run -d -p 6379:6379 -v redis_data:/data --name redis_container redislabs/redisearch:latest
+```
+# ------------------------------------------------------------------------------
+```
+sudo apt install redis-tools
+```
+# ------------------------------------------------------------------------------
+```
+sudo docker run -it --rm --link redis_container:redis redis redis-cli -h redis -p 6379
+```
+# ------------------------------------------------------------------------------
+
+#Press ctrl + c
+
+# ------------------------------------------------------------------------------
+
+```
+sudo docker update --restart always redis_container
+```
+# ------------------------------------------------------------------------------
+```
+sudo docker start redis_container
+```
+# ------------------------------------------------------------------------------
+```
+redis-cli
+```
+# ------------------------------------------------------------------------------
+```
+config set requirepass [Enter the password]
+```
+# ------------------------------------------------------------------------------
+
+# You can now continue to use redis database with redis search & json.
+
+# ------------------------------------------------------------------------------
+
+# Using redisinsight add some data.
+# ------------------------------------------------------------------------------
 ```
 sudo apt install python3-pip
 ```
+# ------------------------------------------------------------------------------
 ```
 pip3 install redis google-cloud-storage
 ```
+# ------------------------------------------------------------------------------
+```
+sudo usermod -aG docker $USER
+newgrp docker  
+```
 
-#newgrp docker  # Activate the new group membership
+# newgrp docker  # Activate the new group membership
+
+# ------------------------------------------------------------------------------
+
+# Add the Email account to bucket with storage admin access.
+
+```
+gcloud auth application-default login
+```
+
+# Copy the link provided on the console, and paste it in browser, login to you GCP Account
+# Allow the access, and copy the code from browser and paste it to terminal and hit enter.
+
+# ------------------------------------------------------------------------------
+#Installation for pm2 server.
+```
+sudo apt-get install npm
+```
+# ------------------------------------------------------------------------------
+```
+sudo npm install -g pm2
+```
+# ------------------------------------------------------------------------------
+```
+nano start_redis_backup.sh
+```
+# ------------------------------------------------------------------------------
+
+#Copy paste the below script in the file.
+
+# ------------------------------------------------------------------------------
+```
+#!/bin/bash
+
+pm2 start backup_redis_to_gcs.py --interpreter python3 --name redis_backup_script
+```
+# ------------------------------------------------------------------------------
+```
+chmod +x start_redis_backup.sh
+
+```
+# ------------------------------------------------------------------------------
+
+```
+nano backup_redis_to_gcs.py
+```
+# ------------------------------------------------------------------------------
+```
+#copy the code from the python file provided in the repository.
+```
+# ------------------------------------------------------------------------------
+```
+sudo pm2 startup systemd
+
+```
+# ------------------------------------------------------------------------------
+
+```
+pm2 start start_redis_backup.sh --name redis_backup_start_script
+
+```
+# ------------------------------------------------------------------------------
+```
+pm2 save
+
+```
+# ------------------------------------------------------------------------------
+```
+sudo reboot
+
+```
+# ------------------------------------------------------------------------------
+```
+pm2 list
+
+```
+# ------------------------------------------------------------------------------
+
+# Summary 
+# 
+# Redis Installation completed.
+# Python and pip Installation completed.
+# Gcloud Packages Installation completed.
+# PM2 Server Installation completed.
+# Python file created and cop pasted the code.
+# Started the redis with GCP backup.
+
