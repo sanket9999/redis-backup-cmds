@@ -160,6 +160,18 @@ pm2 list
 ```
 # ----------------------------------------------------------------
 
+```
+sudo apt-get install google-cloud-sdk
+```
+# ----------------------------------------------------------------
+
+```
+pip install google-cloud-secret-manager
+```
+# ----------------------------------------------------------------
+# In GCP Enable Secret Manager API, In security, Go in secret manager, create secret, enter name and password in value and hit create.
+# ----------------------------------------------------------------
+
 # Summary 
 # 
 # Redis Installation completed.
