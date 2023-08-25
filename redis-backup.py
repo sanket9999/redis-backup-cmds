@@ -1,6 +1,7 @@
 import time
 import subprocess
 from google.cloud import storage
+from google.cloud import secretmanager
 
 # GCS settings
 gcs_bucket_name = 'redis-backup-from-instance'
@@ -11,17 +12,27 @@ def get_formatted_timestamp():
     formatted_time = time.strftime('%Y-%m-%d-%I-%M-%p', current_time)
     return formatted_time
 
+# Google Cloud project ID and secret name
+project_id = 'worqhat-dev'
+secret_name = 'redis-password'
+
+def get_redis_password():
+    client = secretmanager.SecretManagerServiceClient()
+    secret_version = f'projects/{project_id}/secrets/{secret_name}/versions/latest'
+    response = client.access_secret_version(request={"name": secret_version})
+    return response.payload.data.decode("UTF-8")
+
 def main():
-    # Connect to GCS
+    redis_password = get_redis_password()
     storage_client = storage.Client()
     bucket = storage_client.bucket(gcs_bucket_name)
-
+    
     while True:
         try:
             # Authenticate with Redis using redis-cli and perform BGSAVE
-            auth_command = ['redis-cli', '-h', '127.0.0.1', '-p', '6379', '-a', 'qwertyuiop', 'BGSAVE']
+            auth_command = ['redis-cli', '-h', '127.0.0.1', '-p', '6379', '-a', redis_password, 'BGSAVE']
             subprocess.run(auth_command, check=True)
-
+            
             # Wait for the backup to complete
             time.sleep(5)
 
