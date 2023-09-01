@@ -1,35 +1,41 @@
-  GNU nano 6.2                                                                                redis1.py                                                                                         
-import os
 import subprocess
+import time
 from google.cloud import storage
 
 # GCS settings
 gcs_bucket_name = 'redis-backup-from-instance'
-rdb_file_name = 'redis_backups/redis_backup_2023-08-29-02-53-PM.rdb'
+backup_file_name = 'redis_backups/redis_backup_2023-09-01-09-57-AM.rdb'  # Replace with the correct file name
+local_file_path = 'dump.rdb'
 
-# Docker container name running Redis
-redis_container_name = 'redis_container'
-
-# Redis settings
-redis_password = 'qwertyuiopasdfghjklzxcvbnm'
-
-def download_rdb_file():
+def download_backup_from_gcs():
     storage_client = storage.Client()
     bucket = storage_client.bucket(gcs_bucket_name)
-    blob = bucket.blob(rdb_file_name)
+    blob = bucket.blob(backup_file_name)
 
-    local_path = './downloaded.rdb'
-    blob.download_to_filename(local_path)
-    return local_path
+    try:
+        # Download the backup file from GCS to the local filesystem
+        blob.download_to_filename(local_file_path)
+        print(f'Successfully downloaded backup from GCS to {local_file_path}')
+    except Exception as e:
+        print(f'Error downloading backup from GCS: {e}')
 
-def load_rdb_to_redis(rdb_path):
-    subprocess.run(['docker', 'exec', '-it', redis_container_name, 'redis-cli', '-a', redis_password, 'BGSAVE'], check=True)
-    subprocess.run(['docker', 'exec', '-it', redis_container_name, 'redis-cli', '-a', redis_password, 'FLUSHALL'], check=True)
-    subprocess.run(['docker', 'cp', rdb_path, f'{redis_container_name}:/data/dump.rdb'], check=True)
-    subprocess.run(['docker', 'exec', '-it', redis_container_name, 'redis-cli', '-a', redis_password, 'DEBUG', 'RELOAD'], check=True)
-    print('Data loaded into Redis from the .rdb file.')
+def load_backup_to_redis():
+    # Replace 'your-redis-container-name' with the name of your Redis Docker container
+    redis_container_name = 'redis_container'
+
+    try:
+        # Copy the downloaded backup file to the Redis Docker container
+        docker_cp_command = ['docker', 'cp', local_file_path, f'{redis_container_name}:/data/dump.rdb']
+        subprocess.run(docker_cp_command, check=True)
+        print('Backup file copied to Redis container successfully')
+
+        # Restart the Redis server to load the new data
+        redis_restart_command = ['docker', 'restart', redis_container_name]
+        subprocess.run(redis_restart_command, check=True)
+        print('Backup loaded into Redis successfully')
+    except Exception as e:
+        print(f'Error loading backup to Redis: {e}')
 
 if __name__ == '__main__':
-    downloaded_rdb_path = download_rdb_file()
-    load_rdb_to_redis(downloaded_rdb_path)
-    os.remove(downloaded_rdb_path)  # Remove the downloaded .rdb file
+    download_backup_from_gcs()
+    load_backup_to_redis()
