@@ -1,0 +1,51 @@
+    1  gcloud auth application-default login
+    2  sudo apt-get install npm
+    3  sudo npm install -g pm2
+    4  sudo apt-get install google-cloud-sdk
+    5  pip install google-cloud-secret-manager
+    6  sudo apt-get install google-cloud-sdk
+    7  nano backup.py
+    8  python3 backup.py
+    9  ls
+   10  cat dump.rdb
+   11  ls
+   12  cat dump.rdb
+   13  sudo docker logs redis_container
+   14  sudo docker inspect redis_container
+   15  nano backup1.py
+   16  redis-cli SAVE
+   17  redis-cl
+   18  redis-cli
+   19  sudo docker exec -it redis_container bash
+   20  redis-cli -h localhost -p 6379 -a qwertyuiop SAVE
+   21  redis-cli -h localhost -p 6379 -a qwertyuiopasdfghjklzxcvbnm SAVE
+   22  sudo docker cp redis_container:/data/dump.rdb /
+   23  ls
+   24  cat dump.rdb
+   25  ls
+   26  redis-cli
+   27  ls
+   28  rm dump.rdb
+   29  ls
+   30  docker cp redis_container:/data/dump.rdb ~/temp/dump.rdb
+   31  sudo docker cp redis_container:/data/dump.rdb ~/temp/dump.rdb
+   32  sudo docker cp redis_container:/data/dump.rdb ~dump.rdb
+   33  ls
+   34  sudo docker cp redis_container:/data/dump.rdb ~/dump.rdb
+   35  ls
+   36  cat dump.rdb
+   37  sudo cat dump.rdb
+   38  cat ~/.ssh/id_rsa.pub
+   39  cat ~/.ssh/
+   40  ca .ssh
+   41  cd .ssh
+   42  ls
+   43  ca authorized_keys
+   44  cd authorized_keys
+   45  cat authorized_keys
+   46  cd ..
+   47  ls
+   48  python3 -m http.server 8000
+   49  sudo python3 -m http.server 8000
+   50  redis-cli
+   51  history

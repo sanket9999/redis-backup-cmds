@@ -1,0 +1,28 @@
+    1  wget http://34.132.94.67:8000/dump.rdb
+    2  wget http://34.132.94.67:8000/ dump.rdb
+    3  ls
+    4  cat index.html
+    5  wget http://34.132.94.67:8000/dump.rdb
+    6  ls
+    7  cat dump.rdb 
+    8  sudo apt update
+    9  sudo apt install apt-transport-https ca-certificates curl software-properties-common
+   10  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+   11  echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+   12  sudo apt update
+   13  sudo apt install docker-ce docker-ce-cli containerd.io
+   14  sudo docker volume create redis_data
+   15  sudo docker run -d -p 6379:6379 -v redis_data:/data --name redis_container redislabs/redisearch:latest
+   16  sudo apt install redis-tools
+   17  sudo docker run -it --rm --link redis_container:redis redis redis-cli -h redis -p 6379
+   18  sudo docker update --restart always redis_container
+   19  sudo docker start redis_container
+   20  redis-cli
+   21  ls
+   22  redis-cli
+   23  sudo docker stop redis_container
+   24  sudo cp /path/to/your/backup/dump.rdb /var/lib/docker/volumes/redis_data/_data/dump.rdb
+   25  sudo cp dump.rdb /var/lib/docker/volumes/redis_data/_data/dump.rdb
+   26  sudo docker start redis_container
+   27  redis-cli
+   28  history
