@@ -51,7 +51,8 @@ def main():
 
             # Delete the local backup file after uploading to GCS
             os.remove('./dump.rdb')
-            print(f'Deleted local backup file: ./dump.rdb')
+            print(f'Deleted local backup file.')
+            print(f'./dump.rdb')
 
             # Wait for 30 minutes before the next backup
             time.sleep(60)
